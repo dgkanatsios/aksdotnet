@@ -1,0 +1,52 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: aksdotnet-deployment
+spec:
+  replicas: 5
+  revisionHistoryLimit: 10 # number of replicaSets retained in history, default is 10
+  strategy:
+    rollingUpdate: # a new ReplicaSet starts scaling up and the old ReplicaSet starts scaling down. alternative is Recreate, terminates all Pods in existing replicaSet prior to scaling another
+      maxSurge: 3 # ensures that only a certain number of Pods are created above the desired number of Pods - default 25%
+      maxUnavailable: 2 # ensures only a certain number of Pods are unavailable being updated - default 25%
+  selector:
+    matchLabels: # we can also use matchExpressions
+      app: aksdotnet
+  template: # here starts the actual Pod template
+    metadata:
+      labels:
+        app: aksdotnet # this should be an exact match with the deployment.selector.matchLabels label set above
+    spec: 
+      containers:
+      - name: aksdotnet
+        image: docker.io/dgkanatsios/aksdotnet:0.1
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 80
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 80
+          failureThreshold: 1
+          initialDelaySeconds: 3
+          periodSeconds: 10
+        # readinessProbe:
+        #   httpGet:
+        #     path: /health
+        #     port: 80
+        #   failureThreshold: 1
+        #   initialDelaySeconds: 3
+        #   periodSeconds: 10
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: aksdotnet-deployment
+spec:
+  ports:
+  - port: 80
+    protocol: TCP
+    targetPort: 80
+  selector:
+    app: aksdotnet
+  type: LoadBalancer
