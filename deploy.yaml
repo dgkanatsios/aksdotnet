@@ -5,6 +5,7 @@ metadata:
 spec:
   replicas: 5
   revisionHistoryLimit: 10 # number of replicaSets retained in history, default is 10
+  progressDeadlineSeconds: 120 # The maximum time in seconds for a deployment to make progress before it is considered to be failed.
   strategy:
     rollingUpdate: # a new ReplicaSet starts scaling up and the old ReplicaSet starts scaling down. alternative is Recreate, terminates all Pods in existing replicaSet prior to scaling another
       maxSurge: 3 # ensures that only a certain number of Pods are created above the desired number of Pods - default 25%

@@ -12,7 +12,7 @@ Repo is [here](https://hub.docker.com/repository/docker/dgkanatsios/aksdotnet)
 
 ## Script
 
-Run `watch kubectl get pods -o wide --sort-by=.metadata.creationTimestamp`
+Run `watch -n 0.5 kubectl get pods -o wide --sort-by=.metadata.creationTimestamp`
 
 ### Make sure cluster is there and working fine
 
@@ -77,13 +77,13 @@ Run `watch kubectl get pods -o wide --sort-by=.metadata.creationTimestamp`
 - `kubectl rollout history deployment aksdotnet-deployment`: see all deployments
 - `kubectl get rs`: see that there is one ReplicaSet per deployment update
 
-#### Updating to a version with a liveness probe that will error
-
-- `kubectl edit deploy aksdotnet-deployment`: change tag to 0.2-healthfails and observe what happens with the pods (`kubectl get po -w`)
-
 #### Updating to a version with an entrypoint that will error
 
 - `kubectl edit deploy aksdotnet-deployment`: change tag to 0.2-startupfails and observe what happens with the pods (`kubectl get po -w`)
+
+#### Updating to a version with a liveness probe that will error
+
+- `kubectl edit deploy aksdotnet-deployment`: change tag to 0.2-healthfails and observe what happens with the pods (`kubectl get po -w`)
 
 ## I WANNA DO MOARRRR KUBECTL
 
